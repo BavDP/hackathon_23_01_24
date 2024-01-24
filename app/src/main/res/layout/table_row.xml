@@ -6,21 +6,26 @@ android:layout_height="match_parent">
     <ImageView
         android:id="@+id/img0"
         style="@style/picture"
+        android:contentDescription="@string/image_of_game_field"
         android:src="@drawable/question_mark" />
     <ImageView
         android:id="@+id/img1"
         style="@style/picture"
+        android:contentDescription="@string/image_of_game_field"
         android:src="@drawable/question_mark" />
     <ImageView
         android:id="@+id/img2"
         style="@style/picture"
+        android:contentDescription="@string/image_of_game_field"
         android:src="@drawable/question_mark" />
     <ImageView
         android:id="@+id/img3"
         style="@style/picture"
+        android:contentDescription="@string/image_of_game_field"
         android:src="@drawable/question_mark" />
     <ImageView
         android:id="@+id/img4"
         style="@style/picture"
+        android:contentDescription="@string/image_of_game_field"
         android:src="@drawable/question_mark" />
 </TableRow>

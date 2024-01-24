@@ -12,4 +12,5 @@
     <string name="cols_amount">Cols:</string>
     <string name="start_game">Start Game</string>
     <string name="default_game_field_size">2</string>
+    <string name="image_of_game_field">image of game field</string>
 </resources>
