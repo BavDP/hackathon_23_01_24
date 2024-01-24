@@ -2,4 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="favorite">#31A89D</color>
+    <color name="filter">#97A5EF</color>
+    <color name="home">#0044AA</color>
+    <color name="key">#0E83EF</color>
+    <color name="music_note">#8C1DDC</color>
+    <color name="person">#2EAA09</color>
+    <color name="phone">#D0E32C</color>
+    <color name="star">#EFA711</color>
+    <color name="timer">#BB6008</color>
+    <color name="wb_sunny">#000000</color>
+    <color name="edit">#9580F4DD</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.hackathon_23_01_24
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +11,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.hackathon_23_01_24.databinding.ActivityMainBinding
 import com.example.hackathon_23_01_24.models.FieldCell
+import com.example.hackathon_23_01_24.models.GameField
+import com.example.hackathon_23_01_24.models.GameFieldSizeErrors
 import com.example.hackathon_23_01_24.mvvm.GameViewModel
-import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
     private lateinit var _binding: ActivityMainBinding
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         binding.gameField.visibility = View.INVISIBLE
-        lookupImages(){_, _, _, img ->
+        lookupImages { _, _, _, img ->
             images.add(img)
         }
         initVisibilityImagesOfGameField()
@@ -41,11 +43,12 @@ class MainActivity : AppCompatActivity() {
         binding.startGameBtn.setOnClickListener {
             startGameBtnClick()
         }
-        lookupImages() {r,c,_,img ->
-            img.setOnClickListener{ imageClick(r,c,img) }
+        lookupImages {r,c,_,img ->
+            img.setOnClickListener{ imageClick(r,c) }
         }
     }
 
+    @SuppressLint("DiscouragedApi")
     private fun lookupImages(fieldSize: Int = 5, callback: (row: Int, col: Int, tRow: TableRow, img: ImageView) -> Unit) {
         for (i in 0..<fieldSize) {
             val row = findViewById<TableRow>(resources.getIdentifier("row$i", "id", packageName))
@@ -56,11 +59,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("DiscouragedApi")
     private fun getImageView(row: Int, col: Int): ImageView? {
-        var img: ImageView? = null;
-        val row = findViewById<TableRow>(resources.getIdentifier("row$row", "id", packageName))
-        if (row != null) {
-            img = row.findViewById<ImageView>(resources.getIdentifier("img$col", "id", packageName))
+        var img: ImageView? = null
+        val tableRow = findViewById<TableRow>(resources.getIdentifier("row$row", "id", packageName))
+        if (tableRow != null) {
+            img = tableRow.findViewById(resources.getIdentifier("img$col", "id", packageName))
         }
         return img
     }
@@ -71,35 +75,43 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupGameField(gameField: GameField) {
+        initVisibilityImagesOfGameField()
+        lookupImages { r, c, _, img ->
+            if (r < gameField.rows && c < gameField.cols) {
+                img.visibility = View.VISIBLE
+                setImageViewPicture(img, gameField.cells.find { it.row == r && it.col == c })
+            }
+        }
+    }
+
+    private fun handleGameFieldSizeError(error: GameFieldSizeErrors) {
+        val errMsg = when(error) {
+            GameFieldSizeErrors.MIN_SIZE -> resources.getString(R.string.field_size_is_at_least)
+            GameFieldSizeErrors.MAX_SIZE -> resources.getString(R.string.max_size_of_game_field_is)
+            GameFieldSizeErrors.MULTIPLE_OF_TWO -> resources.getString(R.string.the_number_of_cells_on_field_multiple_of_2)
+        }
+        if (errMsg != "") {
+            Toast.makeText(this, errMsg, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun openGameFieldCell(cell: FieldCell) {
+        getImageView(cell.row, cell.col)?.let{imageView ->
+            setImageViewPicture(imageView, cell)
+        }
+    }
+
+    private fun showUserGameErrorNumber(value: Int) {
+        binding.playerErrors.text = resources.getString(R.string.player_error_count, value)
+    }
+
     private fun initObserves() {
         binding.gameField.visibility = View.VISIBLE
-
-        viewModel.gameFieldLiveData.observe(this) {gameField ->
-            initVisibilityImagesOfGameField()
-            lookupImages() { r, c, _, img ->
-                if (r < gameField.rows && c < gameField.cols) {
-                    img.visibility = View.VISIBLE
-                    setImageViewPicture(img, gameField.cells.find { it.row == r && it.col == c })
-                }
-            }
-        }
-
-        viewModel.errorMsgLiveData.observe(this) {errMsg ->
-            if (errMsg != "") {
-                Toast.makeText(this, errMsg, Toast.LENGTH_LONG).show()
-            }
-        }
-
-        viewModel.fieldCellOpenLiveData.observe(this) {cell->
-            getImageView(cell.row, cell.col)?.let{imageView ->
-                setImageViewPicture(imageView, cell)
-            }
-        }
-
-        viewModel.playerErrorCountLiveData.observe(this){
-            binding.playerErrors.text = resources.getString(R.string.player_error_count, it)
-        }
-
+        viewModel.gameFieldLiveData.observe(this) { gameField -> setupGameField(gameField)}
+        viewModel.errorMsgLiveData.observe(this) { error -> handleGameFieldSizeError(error) }
+        viewModel.fieldCellOpenLiveData.observe(this) { cell-> openGameFieldCell(cell) }
+        viewModel.playerErrorCountLiveData.observe(this) { showUserGameErrorNumber(it) }
         viewModel.winLiveData.observe(this) {
             if (it) {
                 Toast.makeText(this, getString(R.string.win), Toast.LENGTH_LONG).show()
@@ -107,15 +119,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("DiscouragedApi")
     private fun setImageViewPicture(imageView: ImageView, fieldCell: FieldCell?) {
         if (fieldCell?.picture?.opened == true) {
             imageView.setImageResource(resources.getIdentifier(fieldCell.picture.name, "drawable", packageName))
+            if (binding.useColorCheckBox.isChecked) {
+                imageView.setColorFilter(
+                    resources.getColor(
+                        resources.getIdentifier(
+                            fieldCell.picture.name,
+                            "color",
+                            packageName
+                        ), null
+                    )
+                )
+            }
         } else {
             imageView.setImageResource(resources.getIdentifier(getString(R.string.question_mark), "drawable", packageName))
+            imageView.setColorFilter(resources.getColor(R.color.black, null))
         }
     }
 
-    private fun imageClick(row: Int, col: Int, image: ImageView) {
+    private fun imageClick(row: Int, col: Int) {
         viewModel.openFieldCell(row, col)
     }
 

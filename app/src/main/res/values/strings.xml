@@ -1,7 +1,15 @@
 <resources>
     <string name="app_name">Hackathon_23_01_24</string>
-    <string name="field_size">Field size</string>
+    <string name="field_size">Field size:</string>
     <string name="question_mark">question_mark</string>
     <string name="player_error_count">Player error count: %d</string>
     <string name="win">WIN!!!!</string>
+    <string name="use_colors">Use colors</string>
+    <string name="field_size_is_at_least">indicate the playing field size is at least 2 by 2!</string>
+    <string name="max_size_of_game_field_is">Max size of game field is 5!</string>
+    <string name="the_number_of_cells_on_field_multiple_of_2">The number of cells on the field must be a multiple of 2</string>
+    <string name="rows_amount">Rows:</string>
+    <string name="cols_amount">Cols:</string>
+    <string name="start_game">Start Game</string>
+    <string name="default_game_field_size">2</string>
 </resources>
