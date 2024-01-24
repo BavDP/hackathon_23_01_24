@@ -9,8 +9,10 @@ import com.example.hackathon_23_01_24.models.GameFieldSizeErrors
 import kotlin.math.max
 
 
-class GameViewModel(private val repository: GameRepository = GameRepository()): ViewModel() {
+class GameViewModel: ViewModel() {
 
+    private val repository: GameRepository = GameRepository()
+    private var rememberPauseTimer: CountDownTimer? = null
     private lateinit var gameField: GameField
     private var playerErrorCount = 0
         set(value) {
@@ -69,7 +71,8 @@ class GameViewModel(private val repository: GameRepository = GameRepository()): 
             gameField.cells.forEach { it.picture.opened = true }
             gameFieldLiveData.value = gameField
 
-            object : CountDownTimer(max(2000, (rows * cols)*300).toLong(), 1000) {
+            rememberPauseTimer?.cancel()
+            rememberPauseTimer = object:CountDownTimer(max(2000, (rows * cols)*300).toLong(), 1000) {
                 override fun onTick(p0: Long) {}
                 override fun onFinish() {
                     gameField.cells.forEach { it.picture.opened = false }
