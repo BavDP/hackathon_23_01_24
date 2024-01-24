@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Hackathon_23_01_24</string>
+    <string name="field_size">Field size</string>
+    <string name="question_mark">question_mark</string>
+    <string name="player_error_count">Player error count: %d</string>
+    <string name="win">WIN!!!!</string>
+</resources>

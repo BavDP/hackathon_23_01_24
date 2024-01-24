@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TableLayout
+        android:id="@+id/gameField"
+        app:layout_constraintTop_toBottomOf="@+id/rowsAmount"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <include android:id="@+id/row0" layout="@layout/table_row" />
+
+        <include android:id="@+id/row1" layout="@layout/table_row" />
+
+        <include android:id="@+id/row2" layout="@layout/table_row" />
+
+        <include android:id="@+id/row3" layout="@layout/table_row" />
+
+        <include android:id="@+id/row4" layout="@layout/table_row" />
+
+    </TableLayout>
+
+    <EditText
+        android:id="@+id/rowsAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/fieldSizeLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="30sp"
+        style="@style/margins"
+        android:inputType="number"
+        tools:text="2"
+         />
+
+    <EditText
+        android:id="@+id/colsAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/fieldSizeLabel"
+        app:layout_constraintStart_toEndOf="@id/rowsAmount"
+        android:textSize="30sp"
+        style="@style/margins"
+        android:inputType="number"
+        tools:text="2"
+        />
+
+    <TextView
+        android:id="@+id/fieldSizeLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/field_size"
+        style="@style/margins"
+        android:textSize="40sp"
+        tools:layout_editor_absoluteY="489dp" />
+
+    <Button
+        android:id="@+id/startGameBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/margins"
+        android:text="Start Game"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameField" />
+
+    <TextView
+        android:id="@+id/playerErrors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Player Errors"
+        android:text="@string/player_error_count"
+        android:textSize="20sp"
+        style="@style/margins"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
